@@ -33,6 +33,20 @@ class Offer(models.Model):
     class Meta:
         verbose_name_plural = 'Услуги'
 
+
+class Order(models.Model):
+    '''Orders'''
+    ClientName = models.CharField(max_length=150, verbose_name='Имя клиента')
+    ClientAddress = models.CharField(max_length=200, verbose_name='Адрес клиента')
+    PrefferedTime = models.DateTimeField(default=datetime.now(), verbose_name='Предпочетаемое время')
+    CreateTime = models.DateTimeField(default=datetime.now(), verbose_name='Дата создания')
+    FactTime = models.DateTimeField(null=True, blank=True, verbose_name='Фактическое время')
+    PlanTotalSumm = models.FloatField(verbose_name='Плановая стоимость')
+    FactTotalSumm = models.FloatField(verbose_name='Фактическая стоимость')
+    Status = models.CharField(max_length=15, choices=ORDERSTATUS, default='New', verbose_name='Статус')
+    class Meta:
+        verbose_name_plural = 'Заявки'
+
 class Worker(models.Model):
     '''Workers'''
     FirstName = models.CharField(max_length=30, verbose_name='Имя')
@@ -40,24 +54,13 @@ class Worker(models.Model):
     WorkerCategory = models.ForeignKey(Category, verbose_name='Категория')
     IsBusy = models.BooleanField(default=False, verbose_name='Занят')
     IsChief = models.BooleanField(default=False, verbose_name='Бригадир')
+    Orders = models.ManyToManyField(Order, verbose_name='Заявки')
     def __unicode__(self):
         return self.LastName + ' ' + self.FirstName
     def __str__(self):
         return self.LastName + ' ' + self.FirstName
     class Meta:
         verbose_name_plural = 'Рабочие'
-
-class Order(models.Model):
-    '''Orders'''
-    ClientName = models.CharField(max_length=150)
-    ClientAddress = models.CharField(max_length=200)
-    PrefferedTime = models.DateTimeField(default=datetime.now())
-    FactTime = models.DateTimeField(null=True, blank=True)
-    PlanTotalSumm = models.FloatField()
-    FactTotalSumm = models.FloatField()
-    Status = models.CharField(max_length=15, choices=ORDERSTATUS, default='New')
-    class Meta:
-        verbose_name_plural = 'Заявки'
 
 class OrderOfferDetail(models.Model):
     OrderName = models.ForeignKey(Order)
@@ -67,7 +70,5 @@ class OrderOfferDetail(models.Model):
     Comments = models.TextField()
     class Meta:
         verbose_name_plural = 'Детали заявки'
-
-
 
 

@@ -30,6 +30,7 @@ def add_offer(request):
     if request.method == 'POST':
         order = Order.objects.latest()
         if 'addOneMore' in request.POST:
+            # Need some optimization
             orderoffers = OrderOfferDetail.objects.filter(OrderName=order.pk).values()
             actualoffers = []
             for o in orderoffers:
@@ -53,4 +54,11 @@ def add_offer(request):
 
 def add_worker(request):
     #TODO: create add_worker view and template
-    pass
+    # goto line 33
+    order = Order.objects.latest()
+    orderoffers = OrderOfferDetail.objects.filter(OrderName=order.pk)
+    actualoffers = []
+    for o in orderoffers:
+        actualoffer = Offer.objects.get(pk=o['OfferName_id'])
+        actualoffers.append(actualoffer)
+

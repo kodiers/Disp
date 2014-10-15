@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Добавьте услугу к заявке{% endblock %}
 {% block content %}
-<form action="{% url "create_order" %}" method="post">
+<form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Создать">
@@ -9,14 +9,14 @@
 <table border="1" bordercolor="black">
     <tr>
         <td>#</td>
-        <td>Фамилия</td>
-        <td>Специальность</td>
+        <td>Название</td>
+        <td>услуга</td>
     </tr>
-    {% for worker in workers%}
+    {% for offer in actualoffers %}
         <tr>
-            <td>{{ worker.pk }}</td>
-            <td>{{ worker.LastName }}</td>
-            <td>{{ worker.WorkerCategory }}</td>
+            <td>{{ offer.pk }}</td>
+            <td>{{ offer.OfferName }}</td>
+            <td>{{ offer.OfferPrice }}</td>
         </tr>
     {% endfor %}
 </table>

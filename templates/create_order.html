@@ -6,10 +6,6 @@
     {{ form.as_p }}
     <input type="submit" value="Создать">
 </form>
-{#<form action="" method="post">#}
-{#    {% csrf_token %}#}
-{#    {{ form2.as_p }}#}
-{#</form>#}
 <table border="1" bordercolor="black">
     <tr>
         <td>#</td>
@@ -24,5 +20,5 @@
         </tr>
     {% endfor %}
 </table>
-<p><a href="{% url "add_offer" %}">Добавть услугу</a> </p>
+{#<p><a href="{% url "add_offer" %}">Добавть услугу</a> </p>#}
 {% endblock %}

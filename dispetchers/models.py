@@ -26,6 +26,7 @@ class Offer(models.Model):
     OfferName = models.CharField(max_length=150, verbose_name='Название услуги')
     OfferCategory = models.ForeignKey(Category, verbose_name='Категория')
     OfferPrice = models.FloatField(verbose_name='Стоимость')
+    Duration = models.FloatField(verbose_name='Базовая длительность', null=True, default=1.0)
     def __unicode__(self):
         return self.OfferName
     def __str__(self):
@@ -41,11 +42,12 @@ class Order(models.Model):
     PrefferedTime = models.DateTimeField(default=datetime.now(), verbose_name='Предпочетаемое время')
     CreateTime = models.DateTimeField(default=datetime.now(), verbose_name='Дата создания')
     FactTime = models.DateTimeField(null=True, blank=True, verbose_name='Фактическое время')
-    PlanTotalSumm = models.FloatField(verbose_name='Плановая стоимость')
-    FactTotalSumm = models.FloatField(verbose_name='Фактическая стоимость')
+    PlanTotalSumm = models.FloatField(verbose_name='Плановая стоимость', null=True)
+    FactTotalSumm = models.FloatField(verbose_name='Фактическая стоимость', null=True)
     Status = models.CharField(max_length=15, choices=ORDERSTATUS, default='New', verbose_name='Статус')
     class Meta:
         verbose_name_plural = 'Заявки'
+        get_latest_by = "CreateTime"
 
 class Worker(models.Model):
     '''Workers'''
@@ -63,12 +65,18 @@ class Worker(models.Model):
         verbose_name_plural = 'Рабочие'
 
 class OrderOfferDetail(models.Model):
-    OrderName = models.ForeignKey(Order)
-    OfferName = models.ForeignKey(Offer)
-    Worker = models.ForeignKey(Worker)
+    OrderName = models.ForeignKey(Order, null=True)
+    OfferName = models.ForeignKey(Offer, null=True)
+    Worker = models.ForeignKey(Worker, null=True)
     FactWorkedHours= models.TimeField(null=True, blank=True)
-    Comments = models.TextField()
+    Comments = models.TextField(null=True)
     class Meta:
         verbose_name_plural = 'Детали заявки'
+
+class WorkerHours(models.Model):
+    '''Worker's busy hours'''
+    worker = models.ManyToManyField(Worker)
+    busyStartTime = models.DateTimeField(null=True)
+    busyEndTime = models.DateTimeField(null=True)
 
 

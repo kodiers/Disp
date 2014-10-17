@@ -45,6 +45,10 @@ class Order(models.Model):
     PlanTotalSumm = models.FloatField(verbose_name='Плановая стоимость', null=True)
     FactTotalSumm = models.FloatField(verbose_name='Фактическая стоимость', null=True)
     Status = models.CharField(max_length=15, choices=ORDERSTATUS, default='New', verbose_name='Статус')
+    def __unicode__(self):
+        return self.ClientName
+    def __str__(self):
+        return self.ClientName
     class Meta:
         verbose_name_plural = 'Заявки'
         get_latest_by = "CreateTime"

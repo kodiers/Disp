@@ -26,7 +26,7 @@ def create_order(request):
     return render_to_response('create_order.html', {'form':form, 'offers':offers}, context_instance=RequestContext(request))
 
 def add_offer(request):
-    #TODO: add workers and fix bug
+    #TODO: fix bug
     if request.method == 'POST':
         order = Order.objects.latest()
         if 'addOneMore' in request.POST:
@@ -37,10 +37,10 @@ def add_offer(request):
                 actualoffer = Offer.objects.get(pk=o['OfferName_id'])
                 actualoffers.append(actualoffer)
             form = AddOfferForm()
-            orderoffer = OrderOfferDetail()
-            orderoffer.OrderName = order
-            orderoffer.OfferName = Offer.objects.get(pk=request.POST['offer'])
-            orderoffer.save()
+            # orderoffer = OrderOfferDetail()
+            # orderoffer.OrderName = order
+            # orderoffer.OfferName = Offer.objects.get(pk=request.POST['offer'])
+            # orderoffer.save()
             return render_to_response('add_offer.html', {'form':form, 'actualoffers':actualoffers}, context_instance=RequestContext(request))
         else:
             form = AddOfferForm()
@@ -69,7 +69,7 @@ def add_worker(request):
             for o in orderoffers:
                 o.Worker = Worker.objects.get(pk=request.POST['worker'])
                 o.save()
-
+        return redirect('index')
     form = WorkerForm()
     return render_to_response('add_worker.html', {'actualoffers': orderoffers, 'form':form},
                               context_instance=RequestContext(request))

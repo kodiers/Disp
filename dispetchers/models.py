@@ -70,6 +70,10 @@ class OrderOfferDetail(models.Model):
     Worker = models.ForeignKey(Worker, null=True)
     FactWorkedHours= models.TimeField(null=True, blank=True)
     Comments = models.TextField(null=True)
+    def __str__(self):
+        return self.OfferName
+    def __unicode__(self):
+        return unicode(self.OfferName)
     class Meta:
         verbose_name_plural = 'Детали заявки'
 

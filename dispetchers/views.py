@@ -1,7 +1,7 @@
 from django.shortcuts import render, render_to_response, get_object_or_404, get_list_or_404, redirect
-from dispetchers.models import Order, OrderOfferDetail, Worker, Offer
+from dispetchers.models import Order, OrderOfferDetail, Worker, Offer, Category
 from django.http import Http404, HttpResponse, HttpResponseNotFound
-from dispetchers.forms import OrderForm, AddOfferForm
+from dispetchers.forms import OrderForm, AddOfferForm, WorkerForm
 from django.template import RequestContext
 
 # Create your views here.
@@ -57,8 +57,21 @@ def add_worker(request):
     # goto line 33
     order = Order.objects.latest()
     orderoffers = OrderOfferDetail.objects.filter(OrderName=order.pk)
-    actualoffers = []
-    for o in orderoffers:
-        actualoffer = Offer.objects.get(pk=o['OfferName_id'])
-        actualoffers.append(actualoffer)
+    # workers = []
+    # # for a in orderoffers:
+    # #     category = Offer.objects.get(OfferName=a)
+    # #     worker = Worker.objects.filter(WorkerCategory=category.OfferCategory)
+    # #     worker_free = worker.exclude(IsBusy=True)
+    # #     workers.append(worker_free)
+    if request.method == 'POST':
+        form = WorkerForm(request.POST)
+        if form.is_valid():
+            for o in orderoffers:
+                o.Worker = Worker.objects.get(pk=request.POST['worker'])
+                o.save()
+
+    form = WorkerForm()
+    return render_to_response('add_worker.html', {'actualoffers': orderoffers, 'form':form},
+                              context_instance=RequestContext(request))
+
 

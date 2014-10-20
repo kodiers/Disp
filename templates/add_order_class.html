@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Test create order view{% endblock %}
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.management_form }}
+    {% for orderofferdetail_form in form %}
+        <ul>{{ orderofferdetail_form.as_p }}</ul>
+    {% endfor %}
+    <input type="submit" value="Save!"/>
+</form>
+{% endblock %}

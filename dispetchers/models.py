@@ -28,9 +28,9 @@ class Offer(models.Model):
     OfferPrice = models.FloatField(verbose_name='Стоимость')
     Duration = models.FloatField(verbose_name='Базовая длительность', null=True, default=1.0)
     def __unicode__(self):
-        return self.OfferName
+        return self.OfferCategory.CategoryName + ':' + self.OfferName
     def __str__(self):
-        return self.OfferName
+        return self.OfferCategory.CategoryName + ':' + self.OfferName
     class Meta:
         verbose_name_plural = 'Услуги'
 
@@ -58,13 +58,15 @@ class Worker(models.Model):
     FirstName = models.CharField(max_length=30, verbose_name='Имя')
     LastName = models.CharField(max_length=50, verbose_name='Фамилия')
     WorkerCategory = models.ForeignKey(Category, verbose_name='Категория')
-    IsBusy = models.BooleanField(default=False, verbose_name='Занят')
+    # IsBusy = models.BooleanField(default=False, verbose_name='Занят')
+    # BusyStartTime = models.DateTimeField(blank=True, null=True)
+    # BusyEndTime = mo
     IsChief = models.BooleanField(default=False, verbose_name='Бригадир')
     Orders = models.ManyToManyField(Order, verbose_name='Заявки')
     def __unicode__(self):
-        return self.LastName + ' ' + self.FirstName
+        return self.WorkerCategory.CategoryName + ':' + self.LastName + ' ' + self.FirstName
     def __str__(self):
-        return self.LastName + ' ' + self.FirstName
+        return self.WorkerCategory.CategoryName + ':' + self.LastName + ' ' + self.FirstName
     class Meta:
         verbose_name_plural = 'Рабочие'
 
@@ -73,7 +75,7 @@ class OrderOfferDetail(models.Model):
     OfferName = models.ForeignKey(Offer, null=True)
     Worker = models.ForeignKey(Worker, null=True)
     FactWorkedHours= models.TimeField(null=True, blank=True)
-    Comments = models.TextField(null=True)
+    Comments = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.OfferName
     def __unicode__(self):

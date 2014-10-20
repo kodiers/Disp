@@ -1,8 +1,9 @@
 from django.shortcuts import render, render_to_response, get_object_or_404, get_list_or_404, redirect
 from dispetchers.models import Order, OrderOfferDetail, Worker, Offer, Category
 from django.http import Http404, HttpResponse, HttpResponseNotFound
-from dispetchers.forms import OrderForm, AddOfferForm, WorkerForm
+from dispetchers.forms import OrderForm, AddOfferForm, WorkerForm, OrderOfferFormset
 from django.template import RequestContext
+from django.views.generic.edit import CreateView, UpdateView
 
 # Create your views here.
 def show_orders(request):
@@ -13,7 +14,7 @@ def show_orders(request):
         return render_to_response('index.html')
 
 def create_order(request):
-    #TODO: create add offer
+    #TODO: old code - need to delete
     offers = []
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -26,7 +27,7 @@ def create_order(request):
     return render_to_response('create_order.html', {'form':form, 'offers':offers}, context_instance=RequestContext(request))
 
 def add_offer(request):
-    #TODO: fix bug
+    #TODO: old code - need to delete
     if request.method == 'POST':
         order = Order.objects.latest()
         if 'addOneMore' in request.POST:
@@ -53,7 +54,7 @@ def add_offer(request):
     return render_to_response('add_offer.html', {'form':form}, context_instance=RequestContext(request))
 
 def add_worker(request):
-    #TODO: create add_worker view and template
+    #TODO: old code - need to delete
     # goto line 33
     order = Order.objects.latest()
     orderoffers = OrderOfferDetail.objects.filter(OrderName=order.pk)
@@ -75,3 +76,31 @@ def add_worker(request):
                               context_instance=RequestContext(request))
 
 
+def create_order_detail(request, order_id=None):
+    order = None
+    if order_id:
+        order = Order.objects.get(id=order_id)
+    if request.method == 'POST':
+        order_form = OrderForm(request.POST, instance=order)
+        orderdetail_formset = OrderOfferFormset(request.POST, instance=order)
+        if order_form.is_valid() and orderdetail_formset.is_valid():
+            r = order_form.save(commit=False)
+            orderdetail_formset.save()
+            r.save()
+            return redirect('index')
+    else:
+        order_form = OrderForm(instance=order)
+        orderdetail_formset = OrderOfferFormset(instance=order)
+    return render_to_response('create_order_detail.html',
+                              {'order_form':order_form, 'orderdetail_formset':orderdetail_formset},
+                              context_instance=RequestContext(request))
+
+# Classes
+
+class OrderCreateView(CreateView):
+    #TODO: old code - need to delete
+    model = Order
+    template_name = "add_order_class.html"
+    form_class = OrderOfferFormset
+    def get_success_url(self):
+        return self.get_object().get_absolute_url()

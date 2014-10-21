@@ -8,39 +8,35 @@ class OrderForm(forms.ModelForm):
         model = Order
         exclude = ['FactTime', 'FactTotalSumm', 'PlanTotalSumm']
 
-class WorkerForm(forms.Form):
-    # worker = forms.ModelChoiceField(queryset=Worker.objects.filter(IsBusy=False), empty_label=None, label='Рабочий')
-    def __init__(self, *args, **kwargs):
-        super(WorkerForm, self).__init__(*args, **kwargs)
-
-class AddOfferForm(forms.Form):
-    offer = forms.ModelChoiceField(queryset=Offer.objects.all(), empty_label=None, label='Услуга')
-    addOneMore = forms.BooleanField(initial=False, label='Добавить еще услугу')
-    def __init__(self, *args, **kwargs):
-        super(AddOfferForm, self).__init__(*args, **kwargs)
+# TODO: old code - need to be deleted
+# class WorkerForm(forms.Form):
+#     # worker = forms.ModelChoiceField(queryset=Worker.objects.filter(IsBusy=False), empty_label=None, label='Рабочий')
+#     def __init__(self, *args, **kwargs):
+#         super(WorkerForm, self).__init__(*args, **kwargs)
+#
+# class AddOfferForm(forms.Form):
+#     offer = forms.ModelChoiceField(queryset=Offer.objects.all(), empty_label=None, label='Услуга')
+#     addOneMore = forms.BooleanField(initial=False, label='Добавить еще услугу')
+#     def __init__(self, *args, **kwargs):
+#         super(AddOfferForm, self).__init__(*args, **kwargs)
 
 # class OrderOfferDetailForm(forms.ModelForm):
 #     worker = forms.ModelChoiceField(queryset=Worker.objects.filter(IsBusy=False))
 #     class Meta:
 #         model = OrderOfferDetail
 
-class CustomInlineFormset(BaseInlineFormSet):
+class OfferDetailInlineFormset(BaseInlineFormSet):
     #TODO: add method to check offer and worker category
     def clean(self):
-        super(CustomInlineFormset, self).clean()
+        super(OfferDetailInlineFormset, self).clean()
         if any(self.errors):
             return
-        workers = []
-        offers = []
         for form in self.forms:
-            workers.append(form.cleaned_data['Worker'])
-            offers.append(form.cleaned_data['OfferName'])
-            for worker in workers:
-                for offer in offers:
-                    if worker.WorkerCategory != offer.OfferCategory:
-                        msg = 'Offer category not equal worker category'
-                        self.add_error('Worker', msg)
-                        self.add_error('OfferName', msg)
+            worker1 = form.cleaned_data.get('Worker', None)
+            offer1 = form.cleaned_data.get('OfferName', None)
+            if worker1 != None and offer1 != None:
+                if worker1.WorkerCategory != offer1.OfferCategory:
+                    raise forms.ValidationError('Категория услуги не соответсвует категории рабочего')
 
 
-OrderOfferFormset = inlineformset_factory(Order, OrderOfferDetail, can_delete=False, exclude=['FactWorkedHours'], formset=CustomInlineFormset)
+OrderOfferFormset = inlineformset_factory(Order, OrderOfferDetail, can_delete=False, exclude=['FactWorkedHours'], formset=OfferDetailInlineFormset)

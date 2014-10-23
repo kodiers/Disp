@@ -18,7 +18,7 @@
     {% for order in orders%}
         <tr>
             <td>{{ order.pk }}</td>
-            <td>{{ order.ClientName }}</td>
+            <td><a href="{% url "edit_order" order_id=order.pk %}">{{ order.ClientName }}</a></td>
             <td>{{ order.CreateTime }}</td>
             <td>{{ order.get_Status_display }}</td>
             <td>{{ order.PlanTotalSumm }}</td>

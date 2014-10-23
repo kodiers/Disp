@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     # url(r'addworker/$', 'dispetchers.views.add_worker', name="add_worker"),
     # url(r'^add_order_class/$', OrderCreateView.as_view(), name="add_order_class"),
     url(r'^create_order_detail/$', 'dispetchers.views.create_order_detail', name='create_order_detail'),
+    url(r'edit_order/(?P<order_id>\d+)/$', 'dispetchers.views.edit_order', name='edit_order'),
     url(r'^admin/', include(admin.site.urls)),
 )

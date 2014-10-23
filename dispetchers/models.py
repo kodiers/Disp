@@ -74,7 +74,7 @@ class OrderOfferDetail(models.Model):
     OrderName = models.ForeignKey(Order, null=True)
     OfferName = models.ForeignKey(Offer, null=True, verbose_name='Услуга')
     Worker = models.ForeignKey(Worker, null=True, verbose_name='Рабочий')
-    FactWorkedHours= models.TimeField(null=True, blank=True)
+    FactWorkedHours= models.TimeField(null=True, blank=True, verbose_name='Фактические часы')
     Comments = models.TextField(null=True, blank=True, verbose_name='Комментарии')
     def __str__(self):
         return self.OfferName

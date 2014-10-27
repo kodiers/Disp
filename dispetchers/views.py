@@ -1,9 +1,12 @@
+#encoding=utf-8
 from django.shortcuts import render, render_to_response, get_object_or_404, get_list_or_404, redirect
-from dispetchers.models import Order, OrderOfferDetail, Worker, Offer, Category
+from dispetchers.models import Order, OrderOfferDetail, Worker, Offer, Category, WorkerHours
 from django.http import Http404, HttpResponse, HttpResponseNotFound
 from dispetchers.forms import OrderForm, OrderOfferFormset, EditOrderForm, EditOrderOfferFormset
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
+from django import forms
+import datetime
 
 # Create your views here.
 def show_orders(request):
@@ -30,8 +33,21 @@ def create_order_detail(request, order_id=None):
             plansumm = 0
             for form in orderdetail_formset:
                 offer = form.cleaned_data.get('OfferName', None)
+                worker = form.cleaned_data.get('Worker', None)
                 if offer != None:
                     plansumm += offer.OfferPrice
+                # Set busy time for worker
+                # TODO: add check for worker busy hours
+                if worker != None:
+                    workerhours = WorkerHours()
+                    existing_wh = WorkerHours.objects.filter(busyStartTime=r.PrefferedTime).filter(worker=worker.id)
+                    # TODO: this code doesn't work - need to fix it
+                    # if existing_wh != None:
+                    #     raise forms.ValidationError('Рабочий %s уже занят во время %s', worker, r.PrefferedTime.strftime('%Y-%m-%d %H:%M'))
+                    workerhours.worker = Worker.objects.get(id=worker.id)
+                    workerhours.busyStartTime = r.PrefferedTime
+                    workerhours.busyEndTime = r.PrefferedTime + datetime.timedelta(seconds=(offer.Duration * 3600))
+                    workerhours.save()
             r.PlanTotalSumm = plansumm
             orderdetail_formset.save()
             r.save()

@@ -28,9 +28,9 @@ class Offer(models.Model):
     OfferPrice = models.FloatField(verbose_name='Стоимость')
     Duration = models.FloatField(verbose_name='Базовая длительность', null=True, default=1.0)
     def __unicode__(self):
-        return self.OfferCategory.CategoryName + ':' + self.OfferName
+        return self.OfferCategory.CategoryName + ':' + self.OfferName + '   ' + str(self.OfferPrice)
     def __str__(self):
-        return self.OfferCategory.CategoryName + ':' + self.OfferName
+        return self.OfferCategory.CategoryName + ':' + self.OfferName + '   ' + str(self.OfferPrice)
     class Meta:
         verbose_name_plural = 'Услуги'
 
@@ -62,7 +62,7 @@ class Worker(models.Model):
     # BusyStartTime = models.DateTimeField(blank=True, null=True)
     # BusyEndTime = mo
     IsChief = models.BooleanField(default=False, verbose_name='Бригадир')
-    Orders = models.ManyToManyField(Order, verbose_name='Заявки')
+    Orders = models.ManyToManyField(Order, verbose_name='Заявки', null=True, blank=True)
     def __unicode__(self):
         return self.WorkerCategory.CategoryName + ':' + self.LastName + ' ' + self.FirstName
     def __str__(self):
@@ -85,8 +85,6 @@ class OrderOfferDetail(models.Model):
 
 class WorkerHours(models.Model):
     '''Worker's busy hours'''
-    worker = models.ManyToManyField(Worker)
+    worker = models.ForeignKey(Worker)
     busyStartTime = models.DateTimeField(null=True)
     busyEndTime = models.DateTimeField(null=True)
-
-

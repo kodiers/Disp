@@ -1,6 +1,6 @@
 #encoding=utf8
 from django import forms
-from dispetchers.models import Order, OrderOfferDetail, Offer, Worker
+from dispetchers.models import Order, OrderOfferDetail, Offer, Worker, WorkerHours
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 
 class OrderForm(forms.ModelForm):

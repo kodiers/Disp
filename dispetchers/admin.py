@@ -8,4 +8,3 @@ admin.site.register(Worker)
 admin.site.register(Order)
 admin.site.register(OrderOfferDetail)
 admin.site.register(WorkerHours)
-

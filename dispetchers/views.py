@@ -37,13 +37,15 @@ def create_order_detail(request, order_id=None):
                 if offer != None:
                     plansumm += offer.OfferPrice
                 # Set busy time for worker
-                # TODO: add check for worker busy hours
+                # TODO: Recreate logic to check time
                 if worker != None:
                     workerhours = WorkerHours()
                     existing_wh = WorkerHours.objects.filter(busyStartTime=r.PrefferedTime).filter(worker=worker.id)
-                    # TODO: this code doesn't work - need to fix it
+                    if existing_wh.exists():
                     # if existing_wh != None:
-                    #     raise forms.ValidationError('Рабочий %s уже занят во время %s', worker, r.PrefferedTime.strftime('%Y-%m-%d %H:%M'))
+                        raise forms.ValidationError(_('Worker %(worker)s is busy on %(time)s'), params={'worker':worker, 'time':r.PrefferedTime.strftime('%Y-%m-%d %H:%M')})
+                        # TODO: don't work if meassage is Russian
+                        # raise forms.ValidationError('Рабочий %s уже занят во время %s' % (worker, r.PrefferedTime.strftime('%Y-%m-%d %H:%M')))
                     workerhours.worker = Worker.objects.get(id=worker.id)
                     workerhours.busyStartTime = r.PrefferedTime
                     workerhours.busyEndTime = r.PrefferedTime + datetime.timedelta(seconds=(offer.Duration * 3600))

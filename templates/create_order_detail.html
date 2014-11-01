@@ -7,9 +7,10 @@
         {{ orderdetail_formset.management_form }}
         <table>
             {{ order_form.as_table }}
-            {% for form in orderdetail_formset.forms %}
-                <table>{{ form }}</table>
-            {% endfor %}
+            {% include "widgets/orderofferdetail.html" %}
+{#            {% for form in orderdetail_formset.forms %}#}
+{#                <table>{{ form }}</table>#}
+{#            {% endfor %}#}
         </table>
         <p><input type="submit" value="Submit!" /></p>
     </form>

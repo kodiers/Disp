@@ -31,5 +31,5 @@ class OfferDetailInlineFormset(BaseInlineFormSet):
         return self.cleaned_data
 
 
-OrderOfferFormset = inlineformset_factory(Order, OrderOfferDetail, can_delete=False, exclude=['FactWorkedHours'], formset=OfferDetailInlineFormset) # Define formset instance ( add extra=N to show N forms)
-EditOrderOfferFormset = inlineformset_factory(Order, OrderOfferDetail, formset=OfferDetailInlineFormset, fields='__all__')
+OrderOfferFormset = inlineformset_factory(Order, OrderOfferDetail, can_delete=False, exclude=['FactWorkedHours'], formset=OfferDetailInlineFormset, extra=1) # Define formset instance ( add extra=N to show N forms)
+EditOrderOfferFormset = inlineformset_factory(Order, OrderOfferDetail, formset=OfferDetailInlineFormset, fields='__all__', extra=1)
